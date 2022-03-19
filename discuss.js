@@ -110,11 +110,20 @@ function onQuestionClick(question)
     // hide question panel
     hideQuestionPanel();
 
+    // clear last details
+    clearQuestionDetails();
+    clearResponsePanel();
+
     // show clicked question
     showDetails();
 
     // create question details
     addQuestionToRight(question);
+
+    // show all previous responses
+    question.responses.forEach(function(response){
+      addResponseInPanel(response)
+    })
 
     // listen for response submit
 
@@ -128,14 +137,30 @@ function onResponseSubmit(question)
 {
   return function()
   {
-    saveResponse(question);
+    var response = {
+      name:  commentatorNameNode.value,
+      description: commentNode.value
+    }
+    saveResponse(question, response);
+    addResponseInPanel(response);
   }
 }
 
 // display response
 
-function addResponseInPanel()
+function addResponseInPanel(response)
 {
+  var userNameNode = document.createElement("h4");
+  userNameNode.innerHTML = response.name;
+
+  var userCommentNode = document.createElement("p");
+  userCommentNode.innerHTML = response.description;
+
+  var container = document.createElement("div");
+  container.appendChild(userNameNode);
+  container.appendChild(userCommentNode);
+
+  responseContainerNode.appendChild(container);
 
 }
 
@@ -171,19 +196,26 @@ function addQuestionToRight(question)
 
 //
 
-function saveResponse(updatedQuestion)
+function saveResponse(updatedQuestion, response)
 {
   var allQuestions = getAllQuestions();
   var revisedQuestions = allQuestions.map(function(question)
   {
     if( updatedQuestion.title === question.title)
     {
-      question.responses.push({
-        name:  commentatorNameNode.value,
-        description: commentNode.value
-      })
+      question.responses.push(response)
     }
     return question;
   })
   localStorage.setItem("questions", JSON.stringify(revisedQuestions));
+}
+
+function clearQuestionDetails()
+{
+  questionDetailContainerNode.innerHTML = "";
+}
+
+function clearResponsePanel()
+{
+  responseContainerNode.innerHTML = "";
 }
