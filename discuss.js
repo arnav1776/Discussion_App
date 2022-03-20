@@ -11,6 +11,42 @@ var commentContainerNode = document.getElementById("commentHolder");
 var commentatorNameNode = document.getElementById("pickName");
 var commentNode = document.getElementById("pickComment");
 var submitCommentNode = document.getElementById("commentBtn");
+var questionSearchNode = document.getElementById("questionSearch");
+
+// listen to value change
+
+questionSearchNode.addEventListener("keyup", function(event)
+{
+  // show filtered result
+  filterResult(event.target.value);
+})
+
+// filter result
+function filterResult(query)
+{
+  debugger;
+  var allQuestions = getAllQuestions();
+  if(query)
+  {
+    clearQuestionForm();
+
+    allQuestions.forEach(function(question)
+    {
+      if(question.title === query)
+      {
+        addQuestionToPanel(question);
+      }
+    });
+  }
+else
+{
+  allQuestions.forEach(function(question)
+  {
+    addQuestionToPanel(question);
+  })
+}
+
+}
 
 
 // display all existing questions
