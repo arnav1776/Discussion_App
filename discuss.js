@@ -91,7 +91,9 @@ function addQuestionToPanel(question)
   allQuestionsListNode.appendChild(questionContainer);
 
   questionContainer.addEventListener("click", onQuestionClick(question) );
-
+  
+  questionDescriptionNode.value="";
+  questionTitleNode.value="";
 }
 
 // clear question
@@ -109,7 +111,6 @@ function onQuestionClick(question)
     // clouser access question variable
     // hide question panel
     hideQuestionPanel();
-
     // clear last details
     clearQuestionDetails();
     clearResponsePanel();
@@ -127,7 +128,7 @@ function onQuestionClick(question)
 
     // listen for response submit
 
-    submitCommentNode.addEventListener("click", onResponseSubmit(question))
+    submitCommentNode.addEventListener("click", onResponseSubmit(question), { once: true})
   }
 }
 
@@ -192,6 +193,7 @@ function addQuestionToRight(question)
 
   questionDetailContainerNode.appendChild(titleNode);
   questionDetailContainerNode.appendChild(descriptionNode);
+
 }
 
 //
