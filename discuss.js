@@ -24,15 +24,14 @@ questionSearchNode.addEventListener("keyup", function(event)
 // filter result
 function filterResult(query)
 {
-  debugger;
   var allQuestions = getAllQuestions();
   if(query)
   {
-    clearQuestionForm();
+    clearQuestionPanel();
 
     allQuestions.forEach(function(question)
     {
-      if(question.title === query)
+      if(question.title.includes(query))
       {
         addQuestionToPanel(question);
       }
@@ -40,12 +39,17 @@ function filterResult(query)
   }
 else
 {
+  clearQuestionPanel();
   allQuestions.forEach(function(question)
   {
     addQuestionToPanel(question);
-  })
+  });
 }
 
+}
+
+function clearQuestionPanel(){
+  allQuestionsListNode.innerHTML = ""
 }
 
 
