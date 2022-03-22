@@ -12,10 +12,12 @@ var commentatorNameNode = document.getElementById("pickName");
 var commentNode = document.getElementById("pickComment");
 var submitCommentNode = document.getElementById("commentBtn");
 var questionSearchNode = document.getElementById("questionSearch");
+var upvote = document.getElementById("upvote");
+var downvote = document.getElementById("downvote");
 
 // listen to value change
 
-questionSearchNode.addEventListener("keyup", function(event)
+questionSearchNode.addEventListener("change", function(event)
 {
   // show filtered result
   filterResult(event.target.value);
@@ -24,18 +26,29 @@ questionSearchNode.addEventListener("keyup", function(event)
 // filter result
 function filterResult(query)
 {
+
   var allQuestions = getAllQuestions();
   if(query)
   {
     clearQuestionPanel();
 
-    allQuestions.forEach(function(question)
+    var filteredQuestions = allQuestions.filter(function(question)
     {
       if(question.title.includes(query))
       {
-        addQuestionToPanel(question);
+        return true;
       }
     });
+    if(filteredQuestions.length)
+    {
+      filteredQuestions.forEach(function(question)
+      {
+        addQuestionToPanel(question);
+      })
+    }
+    else{
+      printNoMatchFound();
+    }
   }
 else
 {
@@ -77,7 +90,10 @@ function onQuestionSubmit()
   var question = {
     title: questionTitleNode.value,
     description: questionDescriptionNode.value,
-    responses: []
+    responses: [],
+    upvotes: 0,
+    downvotes: 0
+
   }
   saveQuestion(question);
   addQuestionToPanel(question);
@@ -130,17 +146,26 @@ function addQuestionToPanel(question)
 
   allQuestionsListNode.appendChild(questionContainer);
 
+
+  var upvoteTextNode = document.createElement("h4");
+  upvoteTextNode.innerHTML = "upvote ="+ question.upvotes;
+  questionContainer.appendChild(upvoteTextNode);
+
+  var downvoteTextNode = document.createElement("h4");
+  downvoteTextNode.innerHTML = "downvote ="+ question.downvotes;
+  questionContainer.appendChild(downvoteTextNode);
+
   questionContainer.addEventListener("click", onQuestionClick(question) );
   
   questionDescriptionNode.value="";
   questionTitleNode.value="";
 }
 
-// clear question
+// // clear question
 
-function clearQuestionForm(){
-  allQuestionsListNode.innerHTML = ""
-}
+// function clearQuestionForm(){
+//   allQuestionsListNode.innerHTML = ""
+// }
 
 // click on question and display question on right pane
 
@@ -168,8 +193,24 @@ function onQuestionClick(question)
 
     // listen for response submit
 
-    submitCommentNode.addEventListener("click", onResponseSubmit(question), { once: true})
+    submitCommentNode.addEventListener("click", onResponseSubmit(question), { once: true});
+
+    upvote.addEventListener("click", upvoteQuestion(question));
+    downvote.addEventListener("click", downvoteQuestion(question));
+
   }
+}
+
+// upvotes
+function upvoteQuestion(question)
+{
+  question.upvotes++;
+}
+
+// downvotes
+function downvoteQuestion(question)
+{
+  question.downvotes++;
 }
 
 // submit response button
@@ -260,4 +301,12 @@ function clearQuestionDetails()
 function clearResponsePanel()
 {
   responseContainerNode.innerHTML = "";
+}
+
+function printNoMatchFound()
+{
+  var title = document.createElement("h1");
+  title.innerHTML = "No match found";
+
+  allQuestionsListNode.appendChild(title)
 }
