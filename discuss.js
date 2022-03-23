@@ -134,6 +134,7 @@ function getAllQuestions()
 function addQuestionToPanel(question)
 {
   var questionContainer = document.createElement("div");
+  questionContainer.setAttribute("id", question.title);  
   questionContainer.style.background = "grey";
 
   var newQuestionTitleNode = document.createElement("h4");
@@ -195,8 +196,8 @@ function onQuestionClick(question)
 
     submitCommentNode.addEventListener("click", onResponseSubmit(question), { once: true});
 
-    upvote.addEventListener("click", upvoteQuestion(question));
-    downvote.addEventListener("click", downvoteQuestion(question));
+    upvote.onclick = upvoteQuestion(question);
+    downvote.onclick = downvoteQuestion(question);
 
   }
 }
@@ -204,13 +205,35 @@ function onQuestionClick(question)
 // upvotes
 function upvoteQuestion(question)
 {
-  question.upvotes++;
+  return function()
+  {
+    question.upvotes++;
+    updateQuestion(question);
+    updateQuestionUI(question);
+  }
 }
 
 // downvotes
 function downvoteQuestion(question)
 {
+  return function()
+  {
   question.downvotes++;
+  updateQuestion(question);
+  updateQuestionUI(question);
+
+  }
+}
+
+// update question UI
+
+function updateQuestionUI(question)
+{
+  var questionContainerNode = document.getElementById(question.title);
+
+  questionContainerNode.childNodes[2].innerHTML = "upvote = "+question.upvotes;
+  questionContainerNode.childNodes[3].innerHTML = "downvote = "+question.downvotes;
+
 }
 
 // submit response button
@@ -274,6 +297,22 @@ function addQuestionToRight(question)
 
   questionDetailContainerNode.appendChild(titleNode);
   questionDetailContainerNode.appendChild(descriptionNode);
+
+}
+
+// update question
+function updateQuestion(updatedQuestion)
+{
+  var allQuestions = getAllQuestions();
+  var revisedQuestions = allQuestions.map(function(question)
+  {
+    if( updatedQuestion.title === question.title)
+    {
+      return updatedQuestion;
+    }
+    return question;
+  })
+  localStorage.setItem("questions", JSON.stringify(revisedQuestions));
 
 }
 
