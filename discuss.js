@@ -367,7 +367,7 @@ function addResponseInPanel(response,question)
   container.appendChild(userNameNode);
   container.appendChild(userCommentNode);
 
-  btnFavOnRes.onclick = clickOnResopnceFavBtn(response,question);
+  btnFavOnRes.onclick = clickOnResopnseFavBtn(response,question);
 
   responseContainerNode.appendChild(container);
 }
@@ -568,12 +568,12 @@ function convertDateToCreatedAtTime(date)
     } 
 }
 
-function clickOnResopnceFavBtn(responce,question){  
+function clickOnResopnseFavBtn(response,question){  
   return function(event){
     console.log(question);
-    responce.isFav = !responce.isFav;
-    updateResponse(responce,question);
-    if(responce.isFav){
+    response.isFav = !response.isFav;
+    updateResponse(response,question);
+    if(response.isFav){
       event.target.style.color = "yellow"
     }else{
       event.target.style.color = "white"
@@ -583,12 +583,12 @@ function clickOnResopnceFavBtn(responce,question){
 
 // update response to a particular question
 
-function updateResponse(responce,question){
-  console.log(responce)
+function updateResponse(response,question){
+  console.log(response)
   console.log(question)
   question.responses.forEach(function(res,inx){
-    if(res.name === responce.name){
-      question.responses[inx]= responce
+    if(res.name === response.name){
+      question.responses[inx]= response
     }
   })
   updateQuestion(question);
